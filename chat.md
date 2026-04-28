@@ -54,3 +54,10 @@
 **用戶**: 請將目前的專案代碼與開發文件完整推送至 GitHub 遠端儲存庫 `https://github.com/Normad2005/AIoT_DIC7`，並為此版本撰寫一份專業的總結報告（README.md）以利後續的專案管理與維護。
 
 **Antigravity**: 沒問題！我已完成 Git 初始化與遠端儲存庫關聯，並成功將所有核心代碼及 `chat.md` 對話紀錄推送至 GitHub。此外，我還為您撰寫了一份結構完整的 `README.md`，內容涵蓋專案特色、安裝步驟以及操作指南，確保您的儲存庫呈現專業的專案風貌。
+
+---
+
+### 2026-04-28 11:46
+**用戶**: 請針對本專案目前的開發成果，說明如何利用 **Streamlit Community Cloud** 或相關雲端平台建立一個可供外部訪問的 **Live Demo** 演示網址，以便向其他利害關係人展示交互式數據分析的功能。
+
+**Antigravity**: 沒問題！我已為您整理了透過 **Streamlit Community Cloud** 進行快速部署的標準作業程序，並同步為您的專案準備好所需的 `requirements.txt` 檔案，以確保雲端環境能自動配置所需的相依庫（如 `scikit-learn`、`altair` 等）。
