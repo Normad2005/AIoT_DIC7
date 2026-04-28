@@ -1,5 +1,4 @@
 <img width="1818" height="868" alt="image" src="https://github.com/user-attachments/assets/0cff58fd-9297-440b-9993-f1c462686710" /># Linear Regression CRISP-DM Explorer
-<img width="1818" height="868" alt="image" src="https://github.com/user-attachments/assets/01e40638-071f-4a26-9931-bfb44cc4137b" />
 
 An interactive web application built with **Streamlit** that demonstrates the complete **CRISP-DM** (Cross-Industry Standard Process for Data Mining) workflow for solving a linear regression problem.
 
