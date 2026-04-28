@@ -57,29 +57,11 @@ y = true_slope * X + true_intercept + noise
 
 # --- CRISP-DM Tabs ---
 tabs = st.tabs([
-    "📊 1-3. Understanding & Preparation", 
-    "🤖 4-5. Modeling & Evaluation", 
-    "🚀 6. Deployment (Visualization)"
+    "🚀 模型評估與視覺化 (預設)", 
+    "📊 數據理解與準備"
 ])
 
-# Phase 1-3: Data Preview & Preparation
-with tabs[0]:
-    st.header("Phases 1-3: Data Understanding & Preparation")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.subheader("Synthetic Data Preview")
-        df = pd.DataFrame(np.hstack([X, y]), columns=['Feature (X)', 'Target (y)'])
-        st.dataframe(df.head(100), use_container_width=True, height=300)
-    
-    with col2:
-        st.subheader("Dataset Statistics")
-        st.write(df.describe())
-        
-    st.info("💡 **Preparation Note:** The data is automatically split into an 80/20 Training/Testing ratio for the modeling phase.")
-
-# Phase 4-5: Modeling & Evaluation
+# --- Modeling & Evaluation Logic (Shared) ---
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 model = LinearRegression()
 model.fit(X_train, y_train)
@@ -88,80 +70,67 @@ y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
-with tabs[1]:
-    st.header("Phases 4-5: Modeling & Evaluation")
+# --- Tab 1: Integrated Evaluation & Visualization ---
+with tabs[0]:
+    st.header("線性回歸模型成果")
     
+    # Metrics Row
     m1, m2, m3 = st.columns(3)
-    m1.metric("Mean Squared Error (MSE)", f"{mse:.2f}", delta_color="inverse")
-    m2.metric("R² Score", f"{r2:.4f}")
-    m3.metric("Samples", f"{n_samples}")
+    m1.metric("均方誤差 (MSE)", f"{mse:.2f}", delta_color="inverse")
+    m2.metric("決定係數 (R² Score)", f"{r2:.4f}")
+    m3.metric("訓練樣本數", f"{len(X_train)}")
     
     st.divider()
     
-    st.subheader("Model Performance Analysis")
-    c1, c2 = st.columns(2)
+    # Visualization and Equation Row
+    col_plot, col_info = st.columns([2, 1])
     
-    with c1:
-        st.markdown("#### Learned Coefficients")
+    with col_plot:
+        st.subheader("互動式擬合圖表")
+        plot_df = pd.DataFrame(np.hstack([X, y]), columns=['Feature (X)', 'Target (y)'])
+        
+        points = alt.Chart(plot_df).mark_circle(size=60, opacity=0.5, color='#3498db').encode(
+            x=alt.X('Feature (X)', title='特徵 (X)'),
+            y=alt.Y('Target (y)', title='目標 (y)'),
+            tooltip=['Feature (X)', 'Target (y)']
+        ).interactive()
+        
+        line_X = np.linspace(plot_df['Feature (X)'].min(), plot_df['Feature (X)'].max(), 100).reshape(-1, 1)
+        line_y = model.predict(line_X)
+        line_df = pd.DataFrame({'Feature (X)': line_X.flatten(), 'Target (y)': line_y.flatten()})
+        
+        line = alt.Chart(line_df).mark_line(color='#e74c3c', size=3).encode(
+            x='Feature (X)', y='Target (y)'
+        )
+        
+        st.altair_chart((points + line).properties(width='container', height=450), use_container_width=True)
+
+    with col_info:
+        st.subheader("學習結果")
+        st.code(f"y = {model.coef_[0][0]:.2f}x + {model.intercept_[0]:.2f}", language="text")
+        
         coeff_df = pd.DataFrame({
-            "Parameter": ["Slope (m)", "Intercept (c)"],
-            "True Value": [true_slope, true_intercept],
-            "Learned Value": [round(model.coef_[0][0], 4), round(model.intercept_[0], 4)]
+            "參數": ["斜率 (a)", "截距 (b)"],
+            "預測值": [round(model.coef_[0][0], 4), round(model.intercept_[0], 4)],
+            "真實值": [true_slope, true_intercept]
         })
         st.table(coeff_df)
         
-    with c2:
-        st.markdown("#### Regression Equation")
-        st.code(f"y = {model.coef_[0][0]:.2f}x + {model.intercept_[0]:.2f}", language="text")
         if r2 > 0.95:
-            st.success("The model has captured the underlying pattern with high precision!")
-        elif r2 > 0.8:
-            st.warning("The model shows a strong trend but is affected by significant noise.")
+            st.success("模型完美擬合！")
         else:
-            st.error("Low R² score. The noise levels are potentially dominating the underlying signal.")
+            st.warning("受噪聲影響，存在偏差。")
 
-# Phase 6: Deployment (Visualization)
-with tabs[2]:
-    st.header("Phase 6: Deployment (Visualization)")
-    st.write("This interactive chart allows you to explore the data points and the regression model's fit.")
-    
-    # Prepare data for Altair
-    plot_df = df.copy()
-    
-    # Create the scatter plot
-    points = alt.Chart(plot_df).mark_circle(size=60, opacity=0.5, color='#3498db').encode(
-        x=alt.X('Feature (X)', title='Feature (X)'),
-        y=alt.Y('Target (y)', title='Target (y)'),
-        tooltip=['Feature (X)', 'Target (y)']
-    ).interactive()
-    
-    # Create the regression line
-    line_X = np.linspace(df['Feature (X)'].min(), df['Feature (X)'].max(), 100).reshape(-1, 1)
-    line_y = model.predict(line_X)
-    line_df = pd.DataFrame({
-        'Feature (X)': line_X.flatten(),
-        'Target (y)': line_y.flatten()
-    })
-    
-    line = alt.Chart(line_df).mark_line(color='#e74c3c', size=3).encode(
-        x='Feature (X)',
-        y='Target (y)'
-    )
-    
-    # Combine layers
-    chart = (points + line).properties(
-        width='container',
-        height=500
-    )
-    
-    st.altair_chart(chart, use_container_width=True)
-    
-    st.markdown("""
-    ### 💡 如何互動？
-    - **縮放/平移**：在圖表上捲動或拖曳。
-    - **查看數值**：將滑鼠懸停在藍色數據點上。
-    - **即時更新**：調整左側邊欄的參數，圖表會自動重繪。
-    """)
+# --- Tab 2: Data Understanding ---
+with tabs[1]:
+    st.header("數據詳情與準備")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.subheader("原始數據預覽")
+        st.dataframe(pd.DataFrame(np.hstack([X, y]), columns=['X', 'y']).head(100), use_container_width=True)
+    with col2:
+        st.subheader("統計摘要")
+        st.write(pd.DataFrame(np.hstack([X, y]), columns=['X', 'y']).describe())
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Antigravity CRISP-DM Toolkit v1.0")
