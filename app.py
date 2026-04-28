@@ -17,58 +17,62 @@ st.set_page_config(
 # --- Custom Styling ---
 st.markdown("""
     <style>
-    /* Main background tweak */
-    .main {
-        background-color: #0e1117;
+    /* Global Black & White Theme */
+    .stApp {
+        background-color: #000000 !important;
+        color: #ffffff !important;
     }
     
-    /* Premium Metric Card */
+    /* Sidebar matching */
+    section[data-testid="stSidebar"] {
+        background-color: #0a0a0a !important;
+        border-right: 1px solid #333 !important;
+    }
+    
+    /* Force all text to white */
+    h1, h2, h3, p, span, label, .stMarkdown {
+        color: #ffffff !important;
+    }
+    
+    /* Premium Metric Card (High Contrast) */
     [data-testid="stMetric"] {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        background: #111 !important;
         padding: 20px !important;
         border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #444 !important;
+        box-shadow: none !important;
     }
     
-    /* Force metric text to be visible */
     [data-testid="stMetricLabel"] > div {
-        color: #94a3b8 !important; /* Light grayish blue for labels */
+        color: #bbb !important; /* Slightly dimmed white for labels */
         font-weight: 500 !important;
     }
     [data-testid="stMetricValue"] > div {
-        color: #ffffff !important; /* Pure white for values */
+        color: #ffffff !important;
         font-weight: 700 !important;
     }
     
-    /* Header styling */
-    h1, h2, h3 {
-        color: #f8fafc !important;
-        font-family: 'Inter', sans-serif;
+    /* Table & Dataframe styling */
+    [data-testid="stDataFrame"] {
+        border: 1px solid #333 !important;
     }
     
-    /* Sidebar styling */
-    section[data-testid="stSidebar"] {
-        background-color: #1e293b;
+    /* Divider matching */
+    hr {
+        border-color: #333 !important;
     }
-    
+
     /* Tab active state */
     .stTabs [data-baseweb="tab-list"] {
         gap: 20px;
+        background-color: #000 !important;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        white-space: pre-wrap;
-        background-color: transparent;
-        border-radius: 4px 4px 0px 0px;
-        color: #94a3b8;
-    }
-    .stTabs [data-baseweb="tab"]:hover {
-        color: #f8fafc;
+        color: #888 !important;
     }
     .stTabs [aria-selected="true"] {
-        color: #38bdf8 !important;
-        border-bottom-color: #38bdf8 !important;
+        color: #ffffff !important;
+        border-bottom-color: #ffffff !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -153,9 +157,9 @@ with tabs[0]:
         )
         
         final_chart = (points + line).configure_axis(
-            gridColor='#334155',
-            labelColor='#94a3b8',
-            titleColor='#f1f5f9'
+            gridColor='#444444',
+            labelColor='#ffffff',
+            titleColor='#ffffff'
         ).configure_view(
             strokeWidth=0
         ).properties(
