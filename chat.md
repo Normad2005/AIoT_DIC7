@@ -61,3 +61,10 @@
 **用戶**: 請針對本專案目前的開發成果，說明如何利用 **Streamlit Community Cloud** 或相關雲端平台建立一個可供外部訪問的 **Live Demo** 演示網址，以便向其他利害關係人展示交互式數據分析的功能。
 
 **Antigravity**: 沒問題！我已為您整理了透過 **Streamlit Community Cloud** 進行快速部署的標準作業程序，並同步為您的專案準備好所需的 `requirements.txt` 檔案，以確保雲端環境能自動配置所需的相依庫（如 `scikit-learn`、`altair` 等）。
+
+---
+
+### 2026-04-28 11:49
+**用戶**: 在部署至 Streamlit Cloud 時遇到 `ModuleNotFoundError: No module named 'matplotlib'` 錯誤，導致應用程式無法正常啟動。
+
+**Antigravity**: 收到報錯資訊。經分析，由於我們已將視覺化引擎升級為 **Altair**，`app.py` 實際上已不再依賴 `matplotlib`。我已從代碼中移除該冗餘引用，這將有效繞過部署環境中的依賴衝突，並確保應用程式能順利加載。
