@@ -31,6 +31,16 @@ st.markdown("""
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     
+    /* Force metric text to be visible */
+    [data-testid="stMetricLabel"] > div {
+        color: #94a3b8 !important; /* Light grayish blue for labels */
+        font-weight: 500 !important;
+    }
+    [data-testid="stMetricValue"] > div {
+        color: #ffffff !important; /* Pure white for values */
+        font-weight: 700 !important;
+    }
+    
     /* Header styling */
     h1, h2, h3 {
         color: #f8fafc !important;
